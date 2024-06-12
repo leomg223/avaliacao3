@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react'
 
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css'
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import Login from './pages/Login';
+import Products from './pages/Products';
+import Services from './pages/Services';
+import Users from './pages/Users';
 import ProductTable from './components/ProductTable'
 import ProductForm from './components/ProductForm'
 
@@ -19,9 +26,13 @@ function App() {
   useEffect(() => {
     // Lista todos os produtos:
     const getProductsList = async() => {
-      const res = await fetch(url);
-      const data = await res.json();
-      setProducts(data);
+      try{
+        const res = await fetch(url);
+        if(!res.ok) throw new Error('Erro ao buscar produtos');
+        const data = await res.json();
+      } catch (error) {
+        console.error('Erro:', error);
+      }
     }
 
     getProductsList();
@@ -114,7 +125,20 @@ function App() {
       </div>
 
       <ProductForm name={name} price={price} stock={stock} handleName={handleName} handlePrice={handlePrice} handleStock={handleStock} saveProduct={saveProduct}/>
+      <Router>
+      <Navbar />
+      <div className="content">
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/users" element={<Users />} />
+        </Routes>
+      </div>
+      <Footer />
+    </Router>
     </>
+    
   )
 }
 
