@@ -126,16 +126,15 @@ function App() {
 
       <ProductForm name={name} price={price} stock={stock} handleName={handleName} handlePrice={handlePrice} handleStock={handleStock} saveProduct={saveProduct}/>
       <Router>
-      <Navbar />
-      <div className="content">
+      <div>
+        <Navbar />
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/products" element={<Products />} />
+          <Route path="/" element={<ProductTable />} />
           <Route path="/services" element={<Services />} />
           <Route path="/users" element={<Users />} />
+          <Route path="/products" element={<Products />} />
         </Routes>
       </div>
-      <Footer />
     </Router>
     </>
     
