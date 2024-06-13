@@ -4,13 +4,13 @@ import './Navbar.css';
 
 const Navbar = () => {
   return (
-    <nav className="navbar">
+    <div className="navbar">
       <Link to="/">Home</Link>
-      <Link to="/products">Produtos</Link>
-      <Link to="/services">Serviços</Link>
-      <Link to="/users">Usuários</Link>
-    </nav>
+      <Link to="/products">Products</Link>
+      <Link to="/services">Services</Link>
+      <Link to="/users">Users</Link>
+    </div>
   );
-};
+}
 
 export default Navbar;
