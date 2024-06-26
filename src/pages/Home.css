@@ -1,0 +1,40 @@
+.home-container {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  
+  .home-container h1 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .home-container p {
+    color: #666;
+    font-size: 18px;
+    margin-bottom: 40px;
+  }
+  
+  .home-container .cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .home-container .card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    text-align: center;
+  }
+  
+  .home-container .card h2 {
+    color: #4CAF50;
+    margin-bottom: 15px;
+  }
+  
+  .home-container .card p {
+    color: #777;
+    font-size: 16px;
+  }

@@ -7,30 +7,28 @@ import Services from './pages/Services';
 import Users from './pages/Users';
 import Products from './pages/Products';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import Login from './pages/Login';
+import Home from './pages/Home';
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [products, setProducts] = useState([]);
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const [edit, setEdit] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const url = 'http://localhost:3000/products';
 
   useEffect(() => {
     const getProductsList = async () => {
-      try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('Erro ao buscar produtos');
-        const data = await res.json();
-        setProducts(data);
-      } catch (error) {
-        console.error('Erro:', error);
-      }
+      const res = await fetch(url);
+      const data = await res.json();
+      setProducts(data);
     };
+
     getProductsList();
   }, []);
 
@@ -38,6 +36,16 @@ function App() {
     setName("");
     setPrice("");
     setStock("");
+  };
+
+  const getProductById = async (id) => {
+    const res = await fetch(url + `/${id}`);
+    const data = await res.json();
+    setName(data.name);
+    setPrice(data.price);
+    setStock(data.stock);
+    setId(data.id);
+    setEdit(true);
   };
 
   const saveProduct = async (e) => {
@@ -49,56 +57,41 @@ function App() {
       },
       body: JSON.stringify({ name, price, stock })
     };
+
     const save_url = edit ? url + `/${id}` : url;
-    try {
-      const res = await fetch(save_url, saveRequestParams);
-      if (!res.ok) throw new Error('Erro ao salvar produto');
+    const res = await fetch(save_url, saveRequestParams);
+
+    if (!edit) {
       const newProduct = await res.json();
-      if (!edit) {
-        setProducts((prevProducts) => [...prevProducts, newProduct]);
-      } else {
-        setProducts((prevProducts) => prevProducts.map(prod => prod.id === id ? newProduct : prod));
-      }
-      clearForm();
-      setEdit(false);
-    } catch (error) {
-      console.error('Erro:', error);
+      setProducts((prevProducts) => [...prevProducts, newProduct]);
     }
+
+    if (edit) {
+      const editedProduct = await res.json();
+      const editedProductIndex = products.findIndex(prod => prod.id === id);
+      products[editedProductIndex] = editedProduct;
+      setProducts(products);
+    }
+
+    clearForm();
+    setEdit(false);
   };
 
   const deleteProduct = async (id) => {
-    try {
-      const res = await fetch(url + `/${id}`, {
-        method: "DELETE",
-        headers: {
-          "content-type": "application/json"
-        }
-      });
-      if (!res.ok) throw new Error('Erro ao excluir produto');
-      setProducts((prevProducts) => prevProducts.filter(prod => prod.id !== id));
-    } catch (error) {
-      console.error('Erro:', error);
-    }
+    const res = await fetch(url + `/${id}`, {
+      method: "DELETE",
+      headers: {
+        "content-type": "application/json"
+      },
+    });
+
+    const deletedProduct = await res.json();
+    setProducts(products.filter(prod => prod.id !== deletedProduct.id));
   };
 
   const handleName = (e) => { setName(e.target.value); };
   const handlePrice = (e) => { setPrice(e.target.value); };
   const handleStock = (e) => { setStock(e.target.value); };
-
-  const getProductById = async (id) => {
-    try {
-      const res = await fetch(url + `/${id}`);
-      if (!res.ok) throw new Error('Erro ao buscar produto');
-      const data = await res.json();
-      setName(data.name);
-      setPrice(data.price);
-      setStock(data.stock);
-      setId(data.id);
-      setEdit(true);
-    } catch (error) {
-      console.error('Erro:', error);
-    }
-  };
 
   return (
     <Router>
@@ -122,9 +115,10 @@ function App() {
           ) : <Navigate to="/login" />} />
           <Route path="/services" element={isAuthenticated ? <Services /> : <Navigate to="/login" />} />
           <Route path="/users" element={isAuthenticated ? <Users /> : <Navigate to="/login" />} />
-          <Route path="/" element={isAuthenticated ? <h2>Bem-vindo ao CRUD com JSON Server</h2> : <Navigate to="/login" />} />
+          <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
         </Routes>
       </div>
+      {isAuthenticated && <Footer />}
     </Router>
   );
 }
