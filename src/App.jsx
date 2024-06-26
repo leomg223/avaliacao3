@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import './App.css';
 import ProductTable from './components/ProductTable';
 import ProductForm from './components/ProductForm';
@@ -6,7 +7,6 @@ import Services from './pages/Services';
 import Users from './pages/Users';
 import Products from './pages/Products';
 import Navbar from './components/Navbar';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
 
 function App() {
@@ -16,6 +16,7 @@ function App() {
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const [edit, setEdit] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const url = 'http://localhost:3000/products';
 
@@ -101,12 +102,11 @@ function App() {
 
   return (
     <Router>
-      <Navbar />
+      {isAuthenticated && <Navbar />}
       <div className="app-container">
         <Routes>
-          <Route path="/" element={<h2>Bem-vindo ao CRUD com JSON Server</h2>} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/products" element={
+          <Route path="/login" element={<Login onLogin={() => setIsAuthenticated(true)} />} />
+          <Route path="/products" element={isAuthenticated ? (
             <>
               <ProductTable products={products} deleteProduct={deleteProduct} editProduct={getProductById} />
               <ProductForm
@@ -119,9 +119,10 @@ function App() {
                 saveProduct={saveProduct}
               />
             </>
-          } />
-          <Route path="/services" element={<Services />} />
-          <Route path="/users" element={<Users />} />
+          ) : <Navigate to="/login" />} />
+          <Route path="/services" element={isAuthenticated ? <Services /> : <Navigate to="/login" />} />
+          <Route path="/users" element={isAuthenticated ? <Users /> : <Navigate to="/login" />} />
+          <Route path="/" element={isAuthenticated ? <h2>Bem-vindo ao CRUD com JSON Server</h2> : <Navigate to="/login" />} />
         </Routes>
       </div>
     </Router>

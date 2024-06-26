@@ -1,56 +1,36 @@
 {
+  "users": [
+    {
+      "id": "1",
+      "email": "admin@example.com",
+      "password": "admin123",
+      "name": "Admin",
+      "role": "admin"
+    },
+    {
+      "id": "2",
+      "email": "user@example.com",
+      "password": "user123",
+      "name": "User",
+      "role": "user"
+    }
+  ],
   "products": [
     {
       "id": "630f",
       "name": "Uva",
       "price": "15",
       "stock": "30"
-    },
-    {
-      "name": "Maçã",
-      "price": "6",
-      "stock": "50",
-      "id": "6310"
-    },
-    {
-      "id": "9c5c",
-      "name": "banana",
-      "price": "3",
-      "stock": "3"
     }
   ],
   "services": [
     {
       "id": "1",
-      "name": "Corte de cabelo",
-      "description": "Corte de cabelo masculino",
-      "price": "20",
-      "duration": "30",
-      "available": true
-    },
-    {
-      "id": "2",
-      "name": "Manicure",
-      "description": "Manicure completa",
-      "price": "25",
-      "duration": "45",
-      "available": true
-    }
-  ],
-  "users": [
-    {
-      "id": "1",
-      "name": "João Silva",
-      "email": "joao@example.com",
-      "password": "123456",
-      "role": "admin"
-    },
-    {
-      "id": "2",
-      "name": "Maria Santos",
-      "email": "maria@example.com",
-      "password": "654321",
-      "role": "user"
+      "name": "Service 1",
+      "description": "Description of Service 1",
+      "price": "100",
+      "duration": "60",
+      "provider": "Provider 1"
     }
   ]
 }
