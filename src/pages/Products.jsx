@@ -1,22 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import './App.css';
-import ProductTable from './components/ProductTable';
-import ProductForm from './components/ProductForm';
-import Services from './pages/Services';
-import Users from './pages/Users';
-import Products from './pages/Products';
-import Navbar from './components/Navbar';
-import Login from './pages/Login';
+import './Products.css';
 
-function App() {
+const Products = () => {
   const [products, setProducts] = useState([]);
-  const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const [edit, setEdit] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [id, setId] = useState("");
 
   const url = 'http://localhost:3000/products';
 
@@ -75,17 +66,13 @@ function App() {
         }
       });
       if (!res.ok) throw new Error('Erro ao excluir produto');
-      setProducts((prevProducts) => prevProducts.filter(prod => prod.id !== id));
+      setProducts(products.filter(prod => prod.id !== id));
     } catch (error) {
       console.error('Erro:', error);
     }
   };
 
-  const handleName = (e) => { setName(e.target.value); };
-  const handlePrice = (e) => { setPrice(e.target.value); };
-  const handleStock = (e) => { setStock(e.target.value); };
-
-  const getProductById = async (id) => {
+  const editProduct = async (id) => {
     try {
       const res = await fetch(url + `/${id}`);
       if (!res.ok) throw new Error('Erro ao buscar produto');
@@ -101,32 +88,46 @@ function App() {
   };
 
   return (
-    <Router>
-      {isAuthenticated && <Navbar />}
-      <div className="app-container">
-        <Routes>
-          <Route path="/login" element={<Login onLogin={() => setIsAuthenticated(true)} />} />
-          <Route path="/products" element={isAuthenticated ? (
-            <>
-              <ProductTable products={products} deleteProduct={deleteProduct} editProduct={getProductById} />
-              <ProductForm
-                name={name}
-                price={price}
-                stock={stock}
-                handleName={handleName}
-                handlePrice={handlePrice}
-                handleStock={handleStock}
-                saveProduct={saveProduct}
-              />
-            </>
-          ) : <Navigate to="/login" />} />
-          <Route path="/services" element={isAuthenticated ? <Services /> : <Navigate to="/login" />} />
-          <Route path="/users" element={isAuthenticated ? <Users /> : <Navigate to="/login" />} />
-          <Route path="/" element={isAuthenticated ? <h2>Bem-vindo ao CRUD com JSON Server</h2> : <Navigate to="/login" />} />
-        </Routes>
-      </div>
-    </Router>
+    <div className="products-container">
+      <h2>Gerenciamento de Produtos</h2>
+      <form onSubmit={saveProduct}>
+        <label className="form-label" htmlFor="name">Nome:</label>
+        <input className="form-input" value={name} type="text" id="name" onChange={(e) => setName(e.target.value)} required />
+        
+        <label className="form-label" htmlFor="price">Preço:</label>
+        <input className="form-input" value={price} type="number" id="price" onChange={(e) => setPrice(e.target.value)} required />
+        
+        <label className="form-label" htmlFor="stock">Estoque:</label>
+        <input className="form-input" value={stock} type="number" id="stock" onChange={(e) => setStock(e.target.value)} required />
+        
+        <button className="form-submit" type="submit">{edit ? "Editar" : "Cadastrar"}</button>
+      </form>
+      
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Preço</th>
+            <th>Estoque</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map(prod => (
+            <tr key={prod.id}>
+              <td>{prod.name}</td>
+              <td>{prod.price}</td>
+              <td>{prod.stock}</td>
+              <td>
+                <button onClick={() => editProduct(prod.id)}>Editar</button>
+                <button onClick={() => deleteProduct(prod.id)}>Excluir</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
-}
+};
 
-export default App;
+export default Products;

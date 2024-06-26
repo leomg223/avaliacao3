@@ -1,10 +1,36 @@
 {
+  "users": [
+    {
+      "id": "1",
+      "email": "admin@example.com",
+      "password": "admin123",
+      "name": "Admin",
+      "role": "admin"
+    },
+    {
+      "id": "2",
+      "email": "user@example.com",
+      "password": "user123",
+      "name": "User",
+      "role": "user"
+    }
+  ],
   "products": [
     {
+      "id": "630f",
       "name": "Uva",
       "price": "15",
-      "stock": "30",
-      "id": "630f"
+      "stock": "30"
+    }
+  ],
+  "services": [
+    {
+      "id": "1",
+      "name": "Service 1",
+      "description": "Description of Service 1",
+      "price": "100",
+      "duration": "60",
+      "provider": "Provider 1"
     }
   ]
 }
